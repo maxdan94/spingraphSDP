@@ -1,6 +1,6 @@
 # spingraphSDP
 SDP solver for some relaxed problems in very large sparse graphs  
-Feel free to use these lines as you wish.
+Feel free to use these lines as you wish.  
 NOTE THAT IT IS A WORK IN PROGRESS.
 
 ## Goemans-Williamson algorithm using spins
