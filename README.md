@@ -1,11 +1,11 @@
 # spingraphSDP
-SDP solver for some relaxed problems in very large sparse graphs
+SDP solver for some relaxed problems in very large sparse graphs  
 Feel free to use these lines as you wish.
 
 ## Goemans-Williamson algorithm using spins
 
 ### Info:
-This is an implementation of the Goemans-Williamson algorithm using spins.
+This is an implementation of the Goemans-Williamson algorithm using spins.  
 It is inspired from this: http://web.stanford.edu/~montanar/SDPgraph/home.html
 
 ### To compile:
