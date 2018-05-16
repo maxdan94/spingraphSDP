@@ -1,6 +1,7 @@
 # spingraphSDP
 SDP solver for some relaxed problems in very large sparse graphs  
 Feel free to use these lines as you wish.
+NOTE THAT IT IS A WORK IN PROGRESS.
 
 ## Goemans-Williamson algorithm using spins
 
@@ -20,9 +21,9 @@ It is inspired from this: http://web.stanford.edu/~montanar/SDPgraph/home.html
 - lab.txt: will contain the assignment for each node -1 and 1 (random hyperplane cut)
 - it will print the size of the cut in the terminal
 
-### Performance
+### Scalability
 
-Sparse graphs with 100M edges in few minutes on a commodity machine
+Sparse graphs with 10M edges in few minutes on a commodity machine
 
 ### Initial contributors:
 Maximilien Danisch  
