@@ -164,9 +164,11 @@ double *spinmaxcut(adjlist *g,unsigned k, unsigned t) {
 	unsigned t2,j;
 	double s;
 	double *emb=init_embedding(n,k);
+	//double cut;//to print the values of the SDP after each iteration
 
 	for (t2=0;t2<t;t2++) {
 		//shuff(g->n,nodes);
+		//cut=0;
 		for (u=0;u<n;u++) {
 			tmp1=k*u;
 			bzero(emb+tmp1,k*sizeof(double));//the vector associated to node u is set to the null vector
@@ -183,59 +185,93 @@ double *spinmaxcut(adjlist *g,unsigned k, unsigned t) {
 			}
 			if (s>0){/////////////////////
 				s=sqrt(s);
+				//cut+=s;
+				for (j=0;j<k;j++){
+					emb[tmp1+j]/=s;
+				}
+			}
+			else{
+				for (j=0;j<k;j++){
+					emb[tmp1+j]=gaussian();
+					s+=emb[tmp1+j]*emb[tmp1+j];
+				}
+				s=sqrt(s);
 				for (j=0;j<k;j++){
 					emb[tmp1+j]/=s;
 				}
 			}
 		}
+		//cut=(2.*g->e+cut)/4.;
+		//printf("%le\n",cut);
 	}
 
 	return emb;
 }
 
-char* hyperplanecut(adjlist* g,double* emb,unsigned k, unsigned long *cut){
+char* hyperplanecut(adjlist* g,double* emb,unsigned k, unsigned long *cut, double *cutsdp){
 	double* vect=malloc(k*sizeof(double));
-	unsigned j;
+	unsigned j,l;
 	unsigned long i,u,tmp;
 	double s;
-	char* lab=malloc(g->n*sizeof(char));//lab[i] = label of node i
+	char *lab1=malloc(g->n*sizeof(char)),*lab2=malloc(g->n*sizeof(char)),*lab3;//lab[i] = label of node i
+	unsigned long cut2;
 
-	//random direction
-	for (j=0;j<k;j++){
-		vect[j]=gaussian();
-	}
-
-	//assigning label
-	for (u=0;u<g->n;u++) {
-		s=0;
-		tmp=k*u;
-		for (j=0;j<k;j++){
-			s+=emb[tmp+j]*vect[j];
-		}
-		if (s<0)
-			lab[u]=-1;
-		else
-			lab[u]=1;
-	}
-
-	//computing size of the cut
 	*cut=0;
-	for (i=0;i<g->e;i++) {
-		if (lab[g->edges[i].s] != lab[g->edges[i].t]){
-			(*cut)++;
+	for (l=0;l<10;l++){//several random cut
+		//random direction
+		for (j=0;j<k;j++){
+			vect[j]=gaussian();
+		}
+
+		//assigning label
+		for (u=0;u<g->n;u++) {
+			s=0;
+			tmp=k*u;
+			for (j=0;j<k;j++){
+				s+=emb[tmp+j]*vect[j];
+			}
+			if (s<0)
+				lab1[u]=-1;
+			else
+				lab1[u]=1;
+		}
+
+		//computing size of the cut
+		cut2=0;
+		for (i=0;i<g->e;i++) {
+			if (lab1[g->edges[i].s] != lab1[g->edges[i].t]){
+				cut2++;
+			}
+		}
+		//printf("cut scal = %le\n",(g->e-cut3)/2);
+		if (cut2>*cut){
+			*cut=cut2;
+			lab3=lab1;
+			lab1=lab2;
+			lab2=lab3;
 		}
 	}
 
-	return lab;
+	*cutsdp=0.;
+	for (i=0;i<g->e;i++) {
+		for (j=0;j<k;j++) {
+			(*cutsdp)+=emb[g->edges[i].s*k+j]*emb[g->edges[i].t*k+j];
+		}
+	}
+	*cutsdp=(g->e-(*cutsdp))/2.;
+
+	return lab2;
 }
 
 int main(int argc,char** argv){
 	adjlist* g;
-	double *emb;
+	double *emb,cutsdp;
 	unsigned long u,cut;
 	unsigned t,k,i;
 	char* lab;
 	FILE* file;
+
+	srand(time(NULL));
 
 	time_t t1,t2;
 
@@ -270,7 +306,9 @@ int main(int argc,char** argv){
 	}
 	fclose(file);
 
-	lab=hyperplanecut(g,emb,k,&cut);
+	printf("Random cut of the hypersphere\n");
+
+	lab=hyperplanecut(g,emb,k,&cut,&cutsdp);
 
 	printf("Printing labels in file %s\n",argv[5]);
 	file=fopen(argv[5],"w");
@@ -279,6 +317,7 @@ int main(int argc,char** argv){
 	}
 	fclose(file);
 
+	printf("Objective of the sdp relaxation = %le\n",cutsdp);
 	printf("Size of the cut = %lu\n",cut);
 
 	t2=time(NULL);
