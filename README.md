@@ -10,6 +10,7 @@ This is an implementation of the Goemans-Williamson algorithm using spins.
 It is inspired from this:
 - http://web.stanford.edu/~montanar/SDPgraph/home.html
 - https://en.wikipedia.org/wiki/Semidefinite_programming#Example_3_(Goemans-Williamson_MAX_CUT_approximation_algorithm)
+- https://www.youtube.com/watch?v=6eFbSf6vGbc
 
 ### To compile:
 "gcc spinmaxcut.c -O9 -o spinmaxcut -lm".
