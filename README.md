@@ -12,6 +12,8 @@ It is inspired from this:
 - https://en.wikipedia.org/wiki/Semidefinite_programming#Example_3_(Goemans-Williamson_MAX_CUT_approximation_algorithm)
 - https://www.youtube.com/watch?v=6eFbSf6vGbc
 
+Each node $u$ is associated with a k-dimensional vector $x_u$ such that $||x_u||=1$. Then the function $\sum_{uv \in E} x_u.x_v$ is minimised in a greedy way updating one vector at a time.
+
 ### To compile:
 "gcc spinmaxcut.c -O9 -o spinmaxcut -lm".
 
