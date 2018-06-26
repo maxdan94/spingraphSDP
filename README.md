@@ -14,6 +14,13 @@ It is inspired from this:
 
 Each node $u$ is associated with a k-dimensional vector $x_u$ such that $||x_u||=1$. Then the function $\sum_{uv \in E} x_u.x_v$ is minimised in a greedy way updating one vector at a time.
 
+Some relevant papers:
+- https://papers-gamma.link/paper/80/
+- https://papers-gamma.link/paper/57/
+- https://papers-gamma.link/paper/81/
+- https://papers-gamma.link/paper/55/
+
+
 ### To compile:
 "gcc spinmaxcut.c -O9 -o spinmaxcut -lm".
 
